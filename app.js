@@ -3,9 +3,9 @@ const content = document.querySelector('.content');
 
 function speak(text) {
     const text_speak = new SpeechSynthesisUtterance(text);
-    text_speak.rate = 1;
+    text_speak.rate = 0.8;
     text_speak.volume = 1;
-    text_speak.pitch = 1;
+    text_speak.pitch = 0.5;
     window.speechSynthesis.speak(text_speak);
 }
 
@@ -43,7 +43,7 @@ btn.addEventListener('click', () => {
 });
 
 function takeCommand(message) {
-    if (message.includes('hey') || message.includes('hello')) {
+    if (message.includes('hey') || message.includes('hello') || message.includes('hi')) {
         speak("Hello Sir, How May I Help You?");
     } 
     else if (message.includes("open google")) {
@@ -78,6 +78,9 @@ function takeCommand(message) {
         const finalText = "Today's date is " + date;
         speak(finalText);
     } 
+    else if (message.includes('how')){
+        speak("Doing great How can I help you today?")
+    }
     else {
         window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
         const finalText = "I found some information for " + message + " on Google";
