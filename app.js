@@ -1,12 +1,9 @@
 const btn = document.querySelector('.talk');
 const content = document.querySelector('.content');
 const jarvisGifImg = document.getElementById('jarvis-gif-img');
-// require('dotenv').config();
-// console.log("dhsa",process.env.GEMINI_API_KEY);
 
 // Gemini API configuration
-// const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const GEMINI_API_KEY = 'AIzaSyAZOJVagB9AdeNQLfZoo_nESawyou45dkc';
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
 
 function speak(text) {
