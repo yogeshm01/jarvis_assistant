@@ -1,18 +1,63 @@
 const btn = document.querySelector('.talk');
 const content = document.querySelector('.content');
+const jarvisGifImg = document.getElementById('jarvis-gif-img');
+
+// Gemini API configuration
+const GEMINI_API_KEY = 'AIzaSyAZOJVagB9AdeNQLfZoo_nESawyou45dkc'; // Replace with your actual Gemini API key
+const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
 
 function speak(text) {
-    const text_speak = new SpeechSynthesisUtterance(text);
-    text_speak.rate = 0.8;
-    text_speak.volume = 1;
-    text_speak.pitch = 0.5;
-    window.speechSynthesis.speak(text_speak);
+    const textSpeak = new SpeechSynthesisUtterance(text);
+    textSpeak.rate = 0.8;
+    textSpeak.volume = 1;
+    textSpeak.pitch = 0.5;
+    window.speechSynthesis.speak(textSpeak);
+}
+
+async function getAIResponse(message) {
+    
+    try {
+        const response = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: `You are JARVIS, a helpful AI assistant. Keep responses concise and friendly. User message: ${message}`
+                    }]
+                }]
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('API Error:', errorData);
+            if (response.status === 401) {
+                return "Invalid API key. Please check your Gemini API key.";
+            }
+            return "I encountered an error while processing your request. Please try again.";
+        }
+
+        const data = await response.json();
+        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+            console.error('Unexpected API response:', data);
+            return "I received an unexpected response. Please try again.";
+        }
+
+        return data.candidates[0].content.parts[0].text.trim();
+    } catch (error) {
+        console.error('Error getting AI response:', error);
+        if (error.message.includes('Failed to fetch')) {
+            return "I'm having trouble connecting to my AI services. Please check your internet connection.";
+        }
+        return "I encountered an unexpected error. Please try again in a moment.";
+    }
 }
 
 function wishMe() {
-    var day = new Date();
-    var hour = day.getHours();
-
+    const hour = new Date().getHours();
     if (hour >= 0 && hour < 12) {
         speak("Good Morning Boss...");
     } else if (hour >= 12 && hour < 17) {
@@ -22,9 +67,21 @@ function wishMe() {
     }
 }
 
+function switchGif() {
+    setTimeout(() => {
+        jarvisGifImg.src = 'jarvis-main.gif';
+    }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    speak("Initializing JARVIS");
+    setTimeout(() => {
+        wishMe();
+    }, 2000); // Wait 2 seconds before the greeting
+});
+
 window.addEventListener('load', () => {
-    speak("Initializing JARVIS...");
-    wishMe();
+    switchGif();
 });
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -42,48 +99,31 @@ btn.addEventListener('click', () => {
     recognition.start();
 });
 
-function takeCommand(message) {
-    if (message.includes('hey') || message.includes('hello') || message.includes('hi')) {
-        speak("Hello Sir, How May I Help You?");
-    } 
-    else if (message.includes("open google")) {
+async function takeCommand(message) {
+    // Handle specific commands first
+    if (message.includes("open google")) {
         window.open("https://google.com", "_blank");
         speak("Opening Google...");
-    } 
-    else if (message.includes("open youtube")) {
+    } else if (message.includes("open youtube")) {
         window.open("https://youtube.com", "_blank");
         speak("Opening Youtube...");
-    } 
-    else if (message.includes("open facebook")) {
+    } else if (message.includes("open facebook")) {
         window.open("https://facebook.com", "_blank");
         speak("Opening Facebook...");
-    } 
-    else if (message.includes('what is') || message.includes('who is') || message.includes('what are')) {
-        window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
-        const finalText = "This is what I found on the internet regarding " + message;
-        speak(finalText);
-    } 
-    else if (message.includes('wikipedia')) {
-        window.open(`https://en.wikipedia.org/wiki/${message.replace("wikipedia", "").trim()}`, "_blank");
-        const finalText = "This is what I found on Wikipedia regarding " + message;
-        speak(finalText);
-    } 
-    else if (message.includes('time')) {
+    } else if (message.includes('time')) {
         const time = new Date().toLocaleString(undefined, { hour: "numeric", minute: "numeric" });
-        const finalText = "The current time is " + time;
-        speak(finalText);
-    } 
-    else if (message.includes('date')) {
+        speak("The current time is " + time);
+    } else if (message.includes('date')) {
         const date = new Date().toLocaleString(undefined, { month: "short", day: "numeric" });
-        const finalText = "Today's date is " + date;
-        speak(finalText);
-    } 
-    else if (message.includes('how')){
-        speak("Doing great How can I help you today?")
-    }
-    else {
-        window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
-        const finalText = "I found some information for " + message + " on Google";
-        speak(finalText);
+        speak("Today's date is " + date);
+    } else {
+        // Get AI response for all other queries
+        const aiResponse = await getAIResponse(message);
+        speak(aiResponse);
+        
+        // If the query seems like a search request, also open Google search
+        // if (message.includes('what is') || message.includes('who is') || message.includes('what are') || message.includes('how to')) {
+        //     window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
+        // }
     }
 }

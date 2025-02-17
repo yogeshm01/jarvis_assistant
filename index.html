@@ -1,32 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JARVIS - Virtual Assistant</title>
-    <link rel="shortcut icon" href="avatar.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
 </head>
-
 <body>
     <section class="main">
         <div class="image-container">
-            <div class="image">
-                <img src="jarvis.gif" alt="image">
+            <div class="jarvis-gif">
+                <img id="jarvis-gif-img" src="jarvis-start.gif" alt="Jarvis">
             </div>
             <h1>J A R V I S</h1>
-            <p>I m a Virtual Assistant JARVIS, How may i help you?</p>
+            <p>I'm a Virtual Assistant JARVIS, How may I help you?</p>
         </div>
         <div class="input">
-            <button class="talk"><i class="fas fa-microphone-alt"></i></button>
-            <h1 class="content"> Click here to speak</h1>
+            <button class="talk">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            </button>
+            <h1 class="content">Click here to speak</h1>
         </div>
     </section>
     <script src="app.js"></script>
 </body>
-
 </html>
