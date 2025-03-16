@@ -3,8 +3,8 @@ const content = document.querySelector('.content');
 const jarvisGifImg = document.getElementById('jarvis-gif-img');
 
 // Gemini API configuration
-const GEMINI_API_KEY = 'AIzaSyAZOJVagB9AdeNQLfZoo_nESawyou45dkc';
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+const GEMINI_API_KEY = 'MY_KEY';
+const API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent';
 
 function speak(text) {
     const textSpeak = new SpeechSynthesisUtterance(text);
@@ -24,9 +24,8 @@ async function getAIResponse(message) {
             },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{
-                        text: `You are JARVIS, a helpful AI assistant. Keep responses concise and friendly. User message: ${message}`
-                    }]
+                    role: "user",
+                    parts: [{ text: `You are JARVIS, a helpful AI assistant. Keep responses concise and friendly. User message: ${message}` }]
                 }]
             })
         });
