@@ -3,7 +3,7 @@ const content = document.querySelector('.content');
 const jarvisGifImg = document.getElementById('jarvis-gif-img');
 
 // Gemini API configuration
-const GEMINI_API_KEY = 'MY_KEY';
+const GEMINI_API_KEY = "AIzaSyCADkndPsA5ziLUR4_y-9KsfJLzvtEzKxs";
 const API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent';
 
 function speak(text) {
